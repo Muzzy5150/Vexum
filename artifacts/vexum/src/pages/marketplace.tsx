@@ -540,7 +540,9 @@ function formatTokenScanOutput(tokenScanData: unknown) {
       holderCountNote?: string;
       top10Percent?: number | null;
       largestHolderPercent?: number | null;
-      top?: Array<{ rank: number; owner?: string; tokenAccount: string; amount: string; percent: number }>;
+      liquidityPoolPercent?: number | null;
+      largestNonLiquidityHolderPercent?: number | null;
+      top?: Array<{ rank: number; owner?: string; tokenAccount: string; amount: string; percent: number; label?: string }>;
       importantWallets?: Array<{ owner?: string; tokenAccount: string; percent: number; reason: string }>;
     };
     sources?: { errors?: string[] };
@@ -562,18 +564,19 @@ function formatTokenScanOutput(tokenScanData: unknown) {
     "",
     `Total Supply: ${data.holders?.totalSupply ?? "Unavailable"}`,
     `Holder Count: ${typeof data.holders?.holderCount === "number" ? data.holders.holderCount.toLocaleString() : data.holders?.holderCountNote ?? "Unavailable"}`,
-    `Top 10 Concentration: ${typeof data.holders?.top10Percent === "number" ? `${data.holders.top10Percent.toFixed(2)}%` : "Unavailable"}`,
-    `Largest Holder: ${typeof data.holders?.largestHolderPercent === "number" ? `${data.holders.largestHolderPercent.toFixed(2)}%` : "Unavailable"}`,
+    `Displayed Top Account Concentration: ${typeof data.holders?.top10Percent === "number" ? `${data.holders.top10Percent.toFixed(2)}%` : "Unavailable"}`,
+    `Liquidity Pool: ${typeof data.holders?.liquidityPoolPercent === "number" ? `${data.holders.liquidityPoolPercent.toFixed(2)}%` : typeof data.holders?.largestHolderPercent === "number" ? `${data.holders.largestHolderPercent.toFixed(2)}%` : "Unavailable"}`,
+    `Largest Non-LP Holder: ${typeof data.holders?.largestNonLiquidityHolderPercent === "number" ? `${data.holders.largestNonLiquidityHolderPercent.toFixed(2)}%` : "Unavailable"}`,
     "",
     "Top holders:",
     ...(topHolders.length > 0
-      ? topHolders.map(holder => `${holder.rank}. ${(holder.owner ?? holder.tokenAccount).slice(0, 6)}...${(holder.owner ?? holder.tokenAccount).slice(-4)} holds ${holder.amount} (${holder.percent.toFixed(2)}%)`)
+      ? topHolders.map(holder => `${holder.rank}. ${(holder.owner ?? holder.tokenAccount).slice(0, 6)}...${(holder.owner ?? holder.tokenAccount).slice(-4)}${holder.label ? ` [${holder.label.toUpperCase()}]` : ""} holds ${holder.amount} (${holder.percent.toFixed(2)}%)`)
       : ["No top-holder distribution returned."]),
     "",
     "Important wallets:",
     ...(importantWallets.length > 0
       ? importantWallets.map(wallet => `${(wallet.owner ?? wallet.tokenAccount).slice(0, 6)}...${(wallet.owner ?? wallet.tokenAccount).slice(-4)} controls ${wallet.percent.toFixed(2)}% (${wallet.reason})`)
-      : ["No single top holder crossed the importance threshold."]),
+      : ["No additional watchlist wallets in the displayed holder sample."]),
     ...(data.sources?.errors?.length ? ["", "Source warnings:", ...data.sources.errors.map(error => `- ${error}`)] : []),
   ].join("\n");
 }

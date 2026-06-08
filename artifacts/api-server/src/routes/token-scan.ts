@@ -30,7 +30,10 @@ type TokenHolderInfo = {
   owner?: string;
   uiAmountString: string;
   percent: number;
+  isLiquidityPool: boolean;
 };
+
+const topHolderLimit = 20;
 
 function isSolanaAddress(value: string) {
   return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(value);
@@ -79,10 +82,11 @@ router.get("/token/scan/:mint", async (req, res) => {
 
 async function scanToken(mint: string) {
   const errors: string[] = [];
-  const [pairs, supply, largestAccounts] = await Promise.all([
+  const [pairs, supply, largestAccounts, solscanHolderCount] = await Promise.all([
     fetchDexPairs(mint, errors),
     fetchSupply(mint, errors),
     fetchLargestAccounts(mint, errors),
+    fetchSolscanHolderCount(mint, errors),
   ]);
 
   const holders = await resolveHolderOwners(largestAccounts, supply, errors);
@@ -90,6 +94,7 @@ async function scanToken(mint: string) {
     .filter(pair => pair.chainId === "solana")
     .sort((a, b) => (b.liquidity?.usd ?? 0) - (a.liquidity?.usd ?? 0))[0];
   const top10Percent = holders.reduce((sum, holder) => sum + holder.percent, 0);
+  const nonLiquidityHolders = holders.filter(holder => !holder.isLiquidityPool);
 
   return {
     mint,
@@ -110,19 +115,28 @@ async function scanToken(mint: string) {
     },
     holders: {
       totalSupply: supply?.uiAmountString,
-      holderCount: null,
-      holderCountNote: "Exact holder count requires an indexed holder API. Helius RPC is used here for supply and top holder distribution.",
+      holderCount: solscanHolderCount,
+      holderCountNote: solscanHolderCount === null
+        ? process.env["SOLSCAN_API_KEY"]
+          ? "Solscan key is configured, but the holder endpoint did not return a count. See source warnings."
+          : "Exact holder count requires an indexed holder API. Solscan will be used when SOLSCAN_API_KEY has holder endpoint access."
+        : undefined,
       top10Percent: holders.length > 0 ? Number(top10Percent.toFixed(2)) : null,
       largestHolderPercent: holders[0] ? Number(holders[0].percent.toFixed(2)) : null,
+      liquidityPoolPercent: holders[0]?.isLiquidityPool ? Number(holders[0].percent.toFixed(2)) : null,
+      largestNonLiquidityHolderPercent: nonLiquidityHolders[0]
+        ? Number(nonLiquidityHolders[0].percent.toFixed(2))
+        : null,
       top: holders.map((holder, index) => ({
         rank: index + 1,
         owner: holder.owner,
         tokenAccount: holder.tokenAccount,
         amount: holder.uiAmountString,
         percent: Number(holder.percent.toFixed(2)),
+        label: holder.isLiquidityPool ? "Liquidity pool" : undefined,
       })),
       importantWallets: holders
-        .filter(holder => holder.percent >= 5)
+        .filter(holder => !holder.isLiquidityPool && holder.percent >= 5)
         .map(holder => ({
           owner: holder.owner,
           tokenAccount: holder.tokenAccount,
@@ -133,6 +147,7 @@ async function scanToken(mint: string) {
     sources: {
       market: "DexScreener",
       rpc: describeRpcEndpoint(rpcEndpoints()[0]),
+      holders: solscanHolderCount === null ? "Solana RPC largest token accounts" : "Solscan holder count + Solana RPC largest token accounts",
       errors,
     },
   };
@@ -185,10 +200,57 @@ async function fetchLargestAccounts(mint: string, errors: string[]) {
     const payload = await solanaRpc<{
       value: Array<{ address: string; amount: string; uiAmountString?: string; decimals: number }>;
     }>("getTokenLargestAccounts", [mint]);
-    return payload.value.slice(0, 10);
+    return payload.value.slice(0, topHolderLimit);
   } catch (error) {
     errors.push(`Largest accounts unavailable: ${formatError(error)}`);
     return [];
+  }
+}
+
+async function fetchSolscanHolderCount(mint: string, errors: string[]) {
+  const apiKey = process.env["SOLSCAN_API_KEY"];
+
+  if (!apiKey) {
+    return null;
+  }
+
+  try {
+    const url = new URL("https://pro-api.solscan.io/v2.0/token/holders");
+    url.searchParams.set("address", mint);
+    url.searchParams.set("page", "1");
+    url.searchParams.set("page_size", "10");
+
+    const response = await fetch(url, {
+      headers: {
+        accept: "application/json",
+        token: apiKey,
+      },
+      signal: AbortSignal.timeout(8_000),
+    });
+
+    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+
+    const payload = await response.json() as {
+      data?: {
+        total?: number;
+      };
+      errors?: {
+        message?: string;
+      };
+    };
+
+    if (payload.errors?.message) {
+      throw new Error(payload.errors.message);
+    }
+
+    if (typeof payload.data?.total !== "number") {
+      throw new Error("Solscan response did not include holder total");
+    }
+
+    return payload.data.total;
+  } catch (error) {
+    errors.push(`Solscan holder count unavailable: ${formatError(error)}`);
+    return null;
   }
 }
 
@@ -218,7 +280,7 @@ async function resolveHolderOwners(
     errors.push(`Holder owner lookup unavailable: ${formatError(error)}`);
   }
 
-  return accounts.map(account => {
+  return accounts.map((account, index) => {
     const amount = BigInt(account.amount);
     const percent = supply && supply.amount > 0n
       ? Number(amount * 10_000n / supply.amount) / 100
@@ -229,6 +291,7 @@ async function resolveHolderOwners(
       owner: owners.get(account.address),
       uiAmountString: account.uiAmountString ?? formatTokenAmount(account.amount, account.decimals),
       percent,
+      isLiquidityPool: index === 0,
     };
   });
 }
@@ -251,7 +314,7 @@ async function solanaRpc<T>(method: string, params: unknown[]): Promise<T> {
       if (!payload.result) throw new Error("Missing RPC result");
       return payload.result;
     } catch (error) {
-      errors.push(`${endpoint}: ${formatError(error)}`);
+      errors.push(`${describeRpcEndpoint(endpoint)}: ${formatError(error)}`);
     }
   }
 
