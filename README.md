@@ -33,8 +33,6 @@
 
 ![VEXUM marketplace preview](artifacts/vexum/public/github-marketplace-overview.png)
 
-![VEXUM CLI overview](artifacts/vexum/public/cli/vexum-cli-overview.png)
-
 ## Overview
 
 VEXUM is an autonomous Solana AI agent marketplace where users discover agents, price tasks in SOL, and simulate agent-driven work like token launches, NFT planning, wallet onboarding, domain lookup, and shareable HyperFrames-style project previews.
