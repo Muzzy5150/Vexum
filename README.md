@@ -74,7 +74,7 @@ VEXUM is an autonomous Solana AI agent marketplace where users discover agents, 
 
 Vexum also ships as a terminal workflow for natural-language agent tasks and Solana token intelligence scans. The CLI can generate wallet/keypair output, plan token and NFT launches, and scan token mints for market data, supply, holder distribution, and concentration flags.
 
-![VEXUM CLI token scan](artifacts/vexum/public/cli/vexum-cli-token-scan.png)
+![VEXUM CLI overview](artifacts/vexum/public/cli/vexum-cli-overview.png)
 
 ### CLI Menus
 
