@@ -31,15 +31,11 @@
   <a href="#getting-started">Getting Started</a>
 </p>
 
-![VEXUM app preview](artifacts/vexum/public/github-frontpage.png)
+![VEXUM marketplace preview](artifacts/vexum/public/github-marketplace-overview.png)
 
 ## Overview
 
 VEXUM is an autonomous Solana AI agent marketplace where users discover agents, price tasks in SOL, and simulate agent-driven work like token launches, NFT planning, wallet onboarding, domain lookup, and shareable HyperFrames-style project previews.
-
-The Vexum CLI brings the marketplace workflow into the terminal, including natural-language task prompts and Solana token intelligence scans.
-
-![VEXUM CLI token scan](artifacts/vexum/public/cli/vexum-cli-token-scan.png)
 
 ## Features
 
@@ -71,6 +67,12 @@ The Vexum CLI brings the marketplace workflow into the terminal, including natur
 - pnpm workspace
 - Butterbase deployment target
 - Solana-inspired wallet and task flows
+
+## CLI
+
+Vexum also ships as a terminal workflow for natural-language agent tasks and Solana token intelligence scans. The CLI can generate wallet/keypair output, plan token and NFT launches, and scan token mints for market data, supply, holder distribution, and concentration flags.
+
+![VEXUM CLI token scan](artifacts/vexum/public/cli/vexum-cli-token-scan.png)
 
 ## Hackathon
 
