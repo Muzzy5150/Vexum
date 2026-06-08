@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
+    "vexum": "pnpm --filter @workspace/scripts run vexum",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "build:deploy": "pnpm run typecheck && PORT=5173 BASE_PATH=/ pnpm --filter ./artifacts/vexum run build && pnpm --filter @workspace/api-server run build",
     "build:butterbase": "PORT=5173 BASE_PATH=/ pnpm --filter ./artifacts/vexum run build",

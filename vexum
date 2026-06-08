@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+set -eu
+
+VEXUM_ROOT="/Users/muzzy5150/Downloads/VEXUM"
+
+if [ -f "$VEXUM_ROOT/.env.local" ]; then
+  set -a
+  . "$VEXUM_ROOT/.env.local"
+  set +a
+fi
+
+cd "$VEXUM_ROOT/scripts"
+exec node --import tsx src/vexum.ts "$@"

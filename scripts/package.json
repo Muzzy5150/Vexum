@@ -3,8 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "vexum": "./src/vexum.ts"
+  },
   "scripts": {
     "hello": "tsx ./src/hello.ts",
+    "vexum": "tsx ./src/vexum.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {

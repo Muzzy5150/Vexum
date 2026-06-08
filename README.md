@@ -37,6 +37,10 @@
 
 VEXUM is an autonomous Solana AI agent marketplace where users discover agents, price tasks in SOL, and simulate agent-driven work like token launches, NFT planning, wallet onboarding, domain lookup, and shareable HyperFrames-style project previews.
 
+The Vexum CLI brings the marketplace workflow into the terminal, including natural-language task prompts and Solana token intelligence scans.
+
+![VEXUM CLI token scan](artifacts/vexum/public/cli/vexum-cli-token-scan.png)
+
 ## Features
 
 | Capability | What it does |
@@ -46,6 +50,7 @@ VEXUM is an autonomous Solana AI agent marketplace where users discover agents, 
 | Wallet onboarding | Simulate Phantom, MetaMask, and email onboarding paths for agent wallet flows. |
 | Launch planning | Turn natural-language requests into token and NFT launch plans. |
 | Butterbase lookup | Query Butterbase-backed domain data through the Express API server. |
+| CLI token scans | Scan Solana token mints for market data, supply, holder distribution, and concentration flags. |
 | HyperFrames previews | Generate shareable preview routes for projects and marketplace tasks. |
 
 ## Agent Roster
@@ -78,7 +83,46 @@ VEXUM is an autonomous Solana AI agent marketplace where users discover agents, 
 
 ```bash
 pnpm install
+pnpm vexum
 pnpm run build
+```
+
+Vexum CLI:
+
+Install the terminal command once:
+
+```bash
+sh scripts/install-vexum-command.sh
+```
+
+Then open Vexum from any terminal:
+
+```bash
+vexum
+```
+
+Then type a request:
+
+```text
+Mint me a solana wallet
+Launch a token called Vexum with 1 billion supply
+Create NFT metadata with 5% royalties
+Audit this Anchor program for signer risks
+Make a HyperFrames promo video for my website
+Give me info about this contract address EK95j96TMbHGkkVNfdJgzoqkPSZ6CqmGkg34PR9fpump
+```
+
+You can also run a one-shot request:
+
+```bash
+vexum Mint me a solana wallet
+vexum give me info about this token EK95j96TMbHGkkVNfdJgzoqkPSZ6CqmGkg34PR9fpump
+```
+
+Token scans use Helius RPC by default, with public RPC fallbacks. To use a different RPC URL:
+
+```bash
+export VEXUM_SOLANA_RPC_URL="https://mainnet.helius-rpc.com/?api-key=YOUR_KEY"
 ```
 
 Frontend-only Butterbase build:

@@ -183,6 +183,7 @@ function classifyTask(prompt: string) {
     airdrop: /\b(airdrop|devnet|faucet|fund wallet)\b/.test(text),
     audit: /\b(audit|security|vulnerabilit|unchecked account|anchor program|risk check|simulate transaction|transaction risk)\b/.test(text),
     launch: /\b(launch|launch package|go to market|token launch|presale|campaign)\b/.test(text),
+    tokenScan: extractSolanaAddress(prompt) !== "",
     domain: /\b(domain|dns|website name|subdomain|butterbase)\b/.test(text),
     hyperframes: /\b(video|make a video|create a video|film|promo|website|twitter|x account|link to website|social media|tweet)\b/.test(text),
     research: /\b(research|analy[sz]e|report|market|compare|strategy|find|summari[sz]e)\b/.test(text),
@@ -294,6 +295,14 @@ function estimateTaskQuote(prompt: string, agentId: string): TaskQuote {
     });
   }
 
+  if (taskTypes.tokenScan) {
+    lineItems.push({
+      label: "Token intelligence scan",
+      sol: 0.024,
+      detail: "Helius RPC token supply, top holder distribution, and DexScreener market summary",
+    });
+  }
+
   if (taskTypes.launch) {
     lineItems.push({
       label: "Launch package",
@@ -345,6 +354,7 @@ function estimateTaskQuote(prompt: string, agentId: string): TaskQuote {
     taskTypes.swap ? "swap" : null,
     taskTypes.airdrop ? "airdrop" : null,
     taskTypes.audit ? "audit" : null,
+    taskTypes.tokenScan ? "token-scan" : null,
     taskTypes.domain ? "domain" : null,
     taskTypes.research ? "research" : null,
     taskTypes.code ? "build" : null,
@@ -375,6 +385,10 @@ function extractDomainQuery(prompt: string) {
   return prompt.match(/\b((?:[a-z0-9-]+\.)+[a-z]{2,})\b/i)?.[1]
     ?? prompt.match(/\bdomain\s+([a-z0-9.-]+)\b/i)?.[1]
     ?? "";
+}
+
+function extractSolanaAddress(prompt: string) {
+  return prompt.match(/\b[1-9A-HJ-NP-Za-km-z]{32,44}\b/)?.[0] ?? "";
 }
 
 function deriveSymbol(prompt: string) {
@@ -438,6 +452,7 @@ function buildSolanaOutput({
   quote,
   previewUrl,
   domainData,
+  tokenScanData,
 }: {
   prompt: string;
   agentName: string;
@@ -445,6 +460,7 @@ function buildSolanaOutput({
   quote: TaskQuote;
   previewUrl?: string;
   domainData?: unknown;
+  tokenScanData?: unknown;
 }) {
   const taskTypes = classifyTask(prompt);
   const sections: string[] = [];
@@ -484,6 +500,10 @@ function buildSolanaOutput({
     sections.push(`DOMAIN LOOKUP\n\nSource: Butterbase app_g1pggrm4fo38\nStatus: ${domainData ? "Fetched" : "Unavailable or not configured"}\n\n${domainData ? JSON.stringify(domainData, null, 2) : "Set BUTTERBASE_TOKEN on the API server to enable live Butterbase domain results."}`);
   }
 
+  if (taskTypes.tokenScan) {
+    sections.push(`SOLANA TOKEN SCAN\n\n${formatTokenScanOutput(tokenScanData)}`);
+  }
+
   if (taskTypes.audit || taskTypes.research) {
     sections.push(`SECURITY / RESEARCH REVIEW\n\nInitial risk checklist:\n- Verify transaction signer set\n- Check token account ownership\n- Check mint and freeze authorities\n- Confirm recipient addresses\n- Simulate before signing\n- Inspect program IDs for expected Solana/Metaplex/Jupiter programs\n- Flag unexpected SOL drains or token approvals\n\nRisk level: ${taskTypes.audit ? "Needs full review before signing" : "Informational"}`);
   }
@@ -497,6 +517,76 @@ function buildSolanaOutput({
   return sections.join("\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
 }
 
+function formatTokenScanOutput(tokenScanData: unknown) {
+  if (!tokenScanData || typeof tokenScanData !== "object") {
+    return "Token scan unavailable. Start the API server and ensure the Helius RPC URL is reachable.";
+  }
+
+  const data = tokenScanData as {
+    token?: { name?: string; ticker?: string };
+    market?: {
+      dex?: string;
+      chart?: string;
+      priceUsd?: string;
+      marketCap?: number;
+      fdv?: number;
+      liquidityUsd?: number;
+      volume24h?: number;
+      change24h?: number;
+    };
+    holders?: {
+      totalSupply?: string;
+      holderCount?: number | null;
+      holderCountNote?: string;
+      top10Percent?: number | null;
+      largestHolderPercent?: number | null;
+      top?: Array<{ rank: number; owner?: string; tokenAccount: string; amount: string; percent: number }>;
+      importantWallets?: Array<{ owner?: string; tokenAccount: string; percent: number; reason: string }>;
+    };
+    sources?: { errors?: string[] };
+  };
+
+  const importantWallets = data.holders?.importantWallets ?? [];
+  const topHolders = data.holders?.top ?? [];
+  return [
+    `Token: ${data.token?.name ?? "Unknown token"}`,
+    `Ticker: ${data.token?.ticker ?? "Unknown"}`,
+    `DEX: ${data.market?.dex ?? "Unavailable"}`,
+    `Chart: ${data.market?.chart ?? "Unavailable"}`,
+    `Price: ${data.market?.priceUsd ? `$${data.market.priceUsd}` : "Unavailable"}`,
+    `Market Cap: ${formatUsd(data.market?.marketCap)}`,
+    `FDV: ${formatUsd(data.market?.fdv)}`,
+    `Liquidity: ${formatUsd(data.market?.liquidityUsd)}`,
+    `24h Volume: ${formatUsd(data.market?.volume24h)}`,
+    `24h Change: ${typeof data.market?.change24h === "number" ? `${data.market.change24h.toFixed(2)}%` : "Unavailable"}`,
+    "",
+    `Total Supply: ${data.holders?.totalSupply ?? "Unavailable"}`,
+    `Holder Count: ${typeof data.holders?.holderCount === "number" ? data.holders.holderCount.toLocaleString() : data.holders?.holderCountNote ?? "Unavailable"}`,
+    `Top 10 Concentration: ${typeof data.holders?.top10Percent === "number" ? `${data.holders.top10Percent.toFixed(2)}%` : "Unavailable"}`,
+    `Largest Holder: ${typeof data.holders?.largestHolderPercent === "number" ? `${data.holders.largestHolderPercent.toFixed(2)}%` : "Unavailable"}`,
+    "",
+    "Top holders:",
+    ...(topHolders.length > 0
+      ? topHolders.map(holder => `${holder.rank}. ${(holder.owner ?? holder.tokenAccount).slice(0, 6)}...${(holder.owner ?? holder.tokenAccount).slice(-4)} holds ${holder.amount} (${holder.percent.toFixed(2)}%)`)
+      : ["No top-holder distribution returned."]),
+    "",
+    "Important wallets:",
+    ...(importantWallets.length > 0
+      ? importantWallets.map(wallet => `${(wallet.owner ?? wallet.tokenAccount).slice(0, 6)}...${(wallet.owner ?? wallet.tokenAccount).slice(-4)} controls ${wallet.percent.toFixed(2)}% (${wallet.reason})`)
+      : ["No single top holder crossed the importance threshold."]),
+    ...(data.sources?.errors?.length ? ["", "Source warnings:", ...data.sources.errors.map(error => `- ${error}`)] : []),
+  ].join("\n");
+}
+
+function formatUsd(value: number | undefined) {
+  if (typeof value !== "number" || Number.isNaN(value)) return "Unavailable";
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: value >= 1 ? 0 : 6,
+  }).format(value);
+}
+
 function buildJobTitle(taskTypes: ReturnType<typeof classifyTask>) {
   if (taskTypes.launch) return "Solana Launch Package";
   if (taskTypes.tokenMint) return "SPL Token Mint Setup";
@@ -505,6 +595,7 @@ function buildJobTitle(taskTypes: ReturnType<typeof classifyTask>) {
   if (taskTypes.transfer) return "Solana Transfer Simulation";
   if (taskTypes.airdrop) return "Devnet Airdrop Setup";
   if (taskTypes.audit) return "Solana Security Review";
+  if (taskTypes.tokenScan) return "Solana Token Intelligence Scan";
   if (taskTypes.domain) return "Domain Lookup";
   if (taskTypes.metadata) return "Solana Metadata Generator";
   if (taskTypes.wallet) return "Solana Wallet Generation";
@@ -529,6 +620,7 @@ function buildExecutionSteps(taskTypes: ReturnType<typeof classifyTask>, quote: 
   if (taskTypes.swap) steps.push({ timestamp: new Date(now + 4600).toLocaleTimeString(), message: "Preparing swap route and slippage summary", agentId: quote.agentId });
   if (taskTypes.airdrop) steps.push({ timestamp: new Date(now + 5000).toLocaleTimeString(), message: "Preparing devnet airdrop request plan", agentId: quote.agentId });
   if (taskTypes.audit) steps.push({ timestamp: new Date(now + 5400).toLocaleTimeString(), message: "Running Solana risk checklist", agentId: quote.agentId });
+  if (taskTypes.tokenScan) steps.push({ timestamp: new Date(now + 5600).toLocaleTimeString(), message: "Scanning token market data and holder distribution", agentId: quote.agentId });
   if (taskTypes.hyperframes) steps.push({ timestamp: new Date(now + 5800).toLocaleTimeString(), message: "Generating HyperFrames preview", agentId: quote.agentId });
   if (taskTypes.domain) steps.push({ timestamp: new Date(now + 6100).toLocaleTimeString(), message: "Fetching Butterbase domain data", agentId: quote.agentId });
 
@@ -648,6 +740,7 @@ export default function MarketplacePage() {
     const jobId = `J${Date.now().toString(36).toUpperCase()}`;
     let previewUrl: string | undefined;
     let domainData: unknown;
+    let tokenScanData: unknown;
 
     if (isHyperframesTask) {
       try {
@@ -687,6 +780,23 @@ export default function MarketplacePage() {
       }
     }
 
+    if (taskTypes.tokenScan) {
+      try {
+        const mint = extractSolanaAddress(prompt);
+        const response = await fetch(`${backendUrl}/api/token/scan/${encodeURIComponent(mint)}`);
+        const payload = await response.json().catch(() => null);
+        if (response.ok) {
+          tokenScanData = payload;
+        } else {
+          tokenScanData = payload ?? { error: response.statusText };
+          toast.error(`Token scan unavailable: ${payload?.error || response.statusText}`);
+        }
+      } catch (error) {
+        tokenScanData = { error: error instanceof Error ? error.message : "Unknown token scan error" };
+        toast.error(`Token scan unavailable: ${error instanceof Error ? error.message : "Unknown error"}`);
+      }
+    }
+
     const finalOutput = buildSolanaOutput({
       prompt,
       agentName: agent.name,
@@ -694,6 +804,7 @@ export default function MarketplacePage() {
       quote,
       previewUrl,
       domainData,
+      tokenScanData,
     });
     
     const newJob: Job = {
