@@ -1,13 +1,37 @@
-# VEXUM CLI — Developer Preview
+# VEXUM
 
-VEXUM's terminal toolkit for Solana wallets, token intelligence, mainnet launches, monitoring and reviewed live trading. Original interface and artwork are preserved. FUD TXN BOT remains **Coming Soon**.
+**Solana mainnet CLI · Wallet tools · Token intelligence · Pump.fun · Jupiter V2 · Metaplex Core**
 
-This developer preview is for contributors building real Solana Mainnet tools. Wallet/token reads and production Jupiter quote/build responses have been observed; offline tests and local SVM transfer/Core simulations pass. **Funded mainnet transfers, swaps, NFT mints and token launches remain unverified. This is not a production-verified release.** Simulation is a security check, never a trading mode.
+[![CI](https://github.com/Muzzy5150/Vexum/actions/workflows/cli.yml/badge.svg?branch=main)](https://github.com/Muzzy5150/Vexum/actions/workflows/cli.yml) ![Solana Mainnet](https://img.shields.io/badge/Solana-Mainnet%20Beta-9945FF?logo=solana&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-22.18%2B-339933?logo=nodedotjs&logoColor=white) ![MIT](https://img.shields.io/badge/license-MIT-222222) [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-2EA44F)](CONTRIBUTING.md)
 
-No website, marketplace or API server is required. The existing repository history is preserved. See [capabilities](docs/CAPABILITIES.md), [release checks](docs/RELEASE.md), [mainnet acceptance](docs/MAINNET_ACCEPTANCE.md) and [security guidance](SECURITY.md).
+VEXUM is a terminal-first Solana toolkit for encrypted wallets, on-chain token research, Pump.fun monitoring, token-launch transaction construction, and guarded swaps. No website, API server, or paper-trading mode required.
 
-Contributors: start with [CONTRIBUTING.md](CONTRIBUTING.md), [architecture](docs/ARCHITECTURE.md) and [adding tools](docs/ADDING_TOOLS.md). Original terminal artwork and FUD TXN BOT's Coming Soon placement are protected by regression tests.
+**Verification:** live mainnet reads and Jupiter quote/build checks have passed. **Funded mainnet transfers, swaps, NFT mints and token launches remain unverified.** Simulation is an engineering security check, not paper trading. [Read capabilities](docs/CAPABILITIES.md) · [Mainnet acceptance](docs/MAINNET_ACCEPTANCE.md).
 
+[Screenshots](#screenshots) · [Install](#installation) · [Commands](#wallets) · [Contribute](CONTRIBUTING.md) · [Add tools](docs/ADDING_TOOLS.md)
+
+## Screenshots
+
+These are real screenshots captured from the running VEXUM terminal. They show the interface, not completed live on-chain transactions. [Capture details](docs/screenshots/README.md).
+
+### Main console
+
+[![VEXUM terminal console](docs/screenshots/console.png)](docs/screenshots/console.png)
+
+### Coin Launcher and Coin Sniper
+
+| Coin Launcher | Coin Sniper |
+| :---: | :---: |
+| [![VEXUM Coin Launcher menu](docs/screenshots/launcher.png)](docs/screenshots/launcher.png) | [![VEXUM Coin Sniper menu](docs/screenshots/sniper.png)](docs/screenshots/sniper.png) |
+
+### FUD TXN BOT — Coming Soon
+
+[![VEXUM FUD TXN BOT terminal menu — Coming Soon](docs/screenshots/fud-txn-bot.png)](docs/screenshots/fud-txn-bot.png)
+
+**FUD TXN BOT remains intentionally disabled.** It does not request keys, sign or submit transactions.
+
+---
+## Installation
 Requires Node 22.18+ and npm. Install/build from a clean checkout:
 
 ```sh
@@ -135,7 +159,7 @@ Unit tests disable external HTTP and use explicit mocks. Integration tests use t
 
 The CLI source and independently installed package graphs audit cleanly after the owned pure JavaScript bigint replacement, Jayson 5 removal of stream-json and compatible build-tool updates. The bundle includes an inventory and third-party notices. Source-lock review is required because installed npm audits do not inspect bundled code. Do not use forced SDK downgrades.
 
-The developer preview is intended for public collaboration. Provider credentials/tier access, funded mainnet simulations and explicitly authorized public-chain execution remain verification limits. Platform check results and remaining limits are recorded in the release report.
+The VEXUM CLI repository is open for development collaboration. Provider credentials/tier access, funded mainnet simulations and explicitly authorized public-chain execution remain verification limits. Platform check results and remaining limits are recorded in the release report.
 
 ## Dependency and release verification
 
