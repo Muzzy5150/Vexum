@@ -45,7 +45,17 @@ for request, expected, down, up in [
             os.write(master, b'\x1b')
             until('vexum>')
             os.write(master, b'exit\r')
-            child.wait(timeout=5)
+            # Keep consuming the PTY while waiting: a child flushing terminal output
+            # can block on the hosted runner's smaller PTY buffer if the parent waits.
+            deadline = time.monotonic()+10
+            while child.poll() is None and time.monotonic() < deadline:
+                ready, _, _ = select.select([master], [], [], .1)
+                if ready:
+                    try:
+                        buf += os.read(master, 65536)
+                    except OSError:
+                        break
+            assert child.poll() is not None, 'CLI did not exit after '+request+': '+repr(buf[-2000:])
             assert child.returncode == 0
             assert b'Exportable Private Key' not in buf
             results.append({'menu':request, 'startup_navigation_return_exit':'passed'})
