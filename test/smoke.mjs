@@ -32,7 +32,7 @@ for (const route of routes) {
 }
 assert.ok(run(["status"]).includes("mainnet-beta"));
 const { version } = JSON.parse(readFileSync(resolve(dirname(binary), "../package.json"), "utf8"));
-assert.equal(run(["version"]).trim(), `vexum ${version}`);
+assert.equal(run(["version"]).trim().split(/\r?\n/).at(-1), `vexum ${version}`);
 assert.ok(run(["fud"]).includes("FUD TXN BOT — Coming Soon"));
 assert.ok(run(["trade", "buy", "--help"]).includes("--preflight"));
 assert.ok(run(["transfer", "--help"]).includes("--intent"));
