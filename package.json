@@ -1,27 +1,75 @@
 {
-  "name": "workspace",
-  "version": "0.0.0",
-  "license": "MIT",
-  "scripts": {
-    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
-    "vexum": "pnpm --filter @workspace/scripts run vexum",
-    "build": "pnpm run typecheck && pnpm -r --if-present run build",
-    "build:deploy": "pnpm run typecheck && PORT=5173 BASE_PATH=/ pnpm --filter ./artifacts/vexum run build && pnpm --filter @workspace/api-server run build",
-    "build:butterbase": "PORT=5173 BASE_PATH=/ pnpm --filter ./artifacts/vexum run build",
-    "zip:butterbase": "pnpm run build:butterbase && cd artifacts/vexum/dist/public && zip -qr ../../../../vexum-frontend.zip .",
-    "start:deploy": "pnpm --filter @workspace/api-server run start",
-    "typecheck:libs": "tsc --build",
-    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
-  },
+  "name": "vexum-cli",
+  "version": "0.2.0-dev.1",
   "private": true,
+  "type": "module",
+  "bin": {
+    "vexum": "./bin/vexum.js"
+  },
+  "scripts": {
+    "vexum": "tsx src/vexum.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json",
+    "build": "tsc -p tsconfig.json --noEmit && node build.mjs",
+    "test": "tsx --import ./test/no-network.ts --test test/*.test.ts",
+    "test:integration": "tsx --test test/integration/*.test.ts",
+    "lint": "eslint src test tools bin build.mjs",
+    "prepack": "npm run build",
+    "test:terminal": "python3 test/terminal_interaction.py",
+    "test:install": "node test/clean-install.mjs",
+    "test:validator": "tsx test/validator/simulation.ts",
+    "verify:mainnet": "tsx tools/verify-mainnet.ts",
+    "test:smoke": "node test/smoke.mjs"
+  },
   "devDependencies": {
-    "@rollup/rollup-darwin-arm64": "^4.61.1",
-    "prettier": "^3.8.3",
-    "typescript": "~5.9.3"
+    "@coral-xyz/anchor": "0.31.1",
+    "@metaplex-foundation/mpl-core": "1.10.0",
+    "@metaplex-foundation/umi": "1.6.0",
+    "@metaplex-foundation/umi-bundle-defaults": "1.6.0",
+    "@metaplex-foundation/umi-web3js-adapters": "1.6.0",
+    "@pump-fun/pump-sdk": "4.3.1",
+    "@solana/spl-token": "0.4.15",
+    "@solana/spl-token-metadata": "0.1.6",
+    "@solana/web3.js": "1.99.0",
+    "@types/bn.js": "5.2.0",
+    "@types/node": "^22.18.0",
+    "bn.js": "5.2.5",
+    "bs58": "6.0.0",
+    "commander": "14.0.2",
+    "esbuild": "0.28.2",
+    "eslint": "10.13.0",
+    "punycode": "2.3.1",
+    "tsx": "4.21.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "zod": "4.6.7",
+    "bigint-buffer": "file:vendor/bigint-buffer-safe"
+  },
+  "description": "VEXUM Solana Mainnet CLI \u2014 Developer Preview; funded execution unverified",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "files": [
+    "dist/vexum.js",
+    "dist/bundle-manifest.json",
+    "dist/THIRD_PARTY_NOTICES.txt",
+    "bin",
+    "README.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "LICENSE",
+    "docs",
+    "config.example.env",
+    ".env.example"
+  ],
+  "overrides": {
+    "toml": "5.0.1",
+    "uuid": "11.1.1",
+    "jayson": "5.0.0",
+    "bigint-buffer": "$bigint-buffer",
+    "esbuild": "0.28.2"
   },
   "dependencies": {
-    "@esbuild/darwin-arm64": "0.27.3",
-    "@tailwindcss/oxide-darwin-arm64": "4.3.0",
-    "lightningcss-darwin-arm64": "1.32.0"
-  }
+    "dotenv": "17.2.3"
+  },
+  "license": "MIT"
 }

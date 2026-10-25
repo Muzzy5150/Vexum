@@ -1,0 +1,191 @@
+{
+  "retrievedOn": "2026-10-24",
+  "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+  "chainIdlAccount": "C88XWfp26heEmDkmfSzeXP7Fd7GQJ2j9dDTUsyiZbUTa",
+  "chainIdlOwner": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+  "rpc": "https://api.mainnet-beta.solana.com",
+  "chainInflatedSha256": "1c70d6c96e01648411ff1579a35853d966407a4dff5020a5d33e92e6923c9e67",
+  "source": "https://github.com/jup-ag/rfq-v2-sdk/blob/f3f30ff2af48f63c11f326a486b8b0eb9611714f/fill-decoder/idls/aggregator.json",
+  "officialInstructionsMatch": true,
+  "subsetSha256": "43d30deadb947b27727e3b5667da916a568efbd308cd9333627632755a515930",
+  "supportedInstructions": [
+    {
+      "name": "route_v2",
+      "discriminator": [
+        187,
+        100,
+        250,
+        204,
+        49,
+        196,
+        175,
+        20
+      ],
+      "accounts": [
+        {
+          "name": "user_transfer_authority",
+          "signer": true
+        },
+        {
+          "name": "user_source_token_account",
+          "writable": true
+        },
+        {
+          "name": "user_destination_token_account",
+          "writable": true
+        },
+        {
+          "name": "source_mint"
+        },
+        {
+          "name": "destination_mint"
+        },
+        {
+          "name": "source_token_program"
+        },
+        {
+          "name": "destination_token_program"
+        },
+        {
+          "name": "destination_token_account",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "event_authority",
+          "address": "D8cy77BBepLMngZx6ZukaTff5hCt1HrWyKk3Hnd9oitf"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "in_amount",
+          "type": "u64"
+        },
+        {
+          "name": "quoted_out_amount",
+          "type": "u64"
+        },
+        {
+          "name": "slippage_bps",
+          "type": "u16"
+        },
+        {
+          "name": "platform_fee_bps",
+          "type": "u16"
+        },
+        {
+          "name": "positive_slippage_bps",
+          "type": "u16"
+        },
+        {
+          "name": "route_plan",
+          "type": {
+            "vec": {
+              "defined": {
+                "name": "RoutePlanStepV2"
+              }
+            }
+          }
+        }
+      ],
+      "returns": "u64"
+    },
+    {
+      "name": "shared_accounts_route_v2",
+      "discriminator": [
+        209,
+        152,
+        83,
+        147,
+        124,
+        254,
+        216,
+        233
+      ],
+      "accounts": [
+        {
+          "name": "program_authority"
+        },
+        {
+          "name": "user_transfer_authority",
+          "signer": true
+        },
+        {
+          "name": "source_token_account",
+          "writable": true
+        },
+        {
+          "name": "program_source_token_account",
+          "writable": true
+        },
+        {
+          "name": "program_destination_token_account",
+          "writable": true
+        },
+        {
+          "name": "destination_token_account",
+          "writable": true
+        },
+        {
+          "name": "source_mint"
+        },
+        {
+          "name": "destination_mint"
+        },
+        {
+          "name": "source_token_program"
+        },
+        {
+          "name": "destination_token_program"
+        },
+        {
+          "name": "event_authority",
+          "address": "D8cy77BBepLMngZx6ZukaTff5hCt1HrWyKk3Hnd9oitf"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "id",
+          "type": "u8"
+        },
+        {
+          "name": "in_amount",
+          "type": "u64"
+        },
+        {
+          "name": "quoted_out_amount",
+          "type": "u64"
+        },
+        {
+          "name": "slippage_bps",
+          "type": "u16"
+        },
+        {
+          "name": "platform_fee_bps",
+          "type": "u16"
+        },
+        {
+          "name": "positive_slippage_bps",
+          "type": "u16"
+        },
+        {
+          "name": "route_plan",
+          "type": {
+            "vec": {
+              "defined": {
+                "name": "RoutePlanStepV2"
+              }
+            }
+          }
+        }
+      ],
+      "returns": "u64"
+    }
+  ]
+}

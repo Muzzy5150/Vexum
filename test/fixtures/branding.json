@@ -1,0 +1,10 @@
+{
+  "baseline": "54f530e",
+  "literalHashes": {
+    "runFudTxnBot": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "coinLauncherBanner": "2ed62f4fb743ef6b0fb9f3b5bac91c885e46c1c07b391d0e6daa373c897370d7",
+    "coinSniperBanner": "24fc4d14e6a2d9a5e0e6615f9aaefb56897f371cb4b2b86eefae14746b82d1e7",
+    "fudTxnBotBanner": "70da8f3fd6e31c1d64a238b30f71eb902affe68b8e35698c6cbc742aa495e348",
+    "vexumReturnSplashLines": "47b03c5187b9ba3c59beddf0f7bd0967e27b71f8d7eeca438de68c1e7574fd1a"
+  }
+}

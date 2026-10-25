@@ -1,0 +1,15 @@
+{
+  "method": "actual POSIX PTY output interpreted by pyte and rendered by Pillow",
+  "dimensions": [
+    120,
+    46
+  ],
+  "privateInput": false,
+  "broadcast": "disabled",
+  "screens": [
+    "console",
+    "launcher",
+    "sniper",
+    "fud-txn-bot"
+  ]
+}

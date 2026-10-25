@@ -1,0 +1,17 @@
+# Security guidance
+
+VEXUM controls wallet keys and can construct irreversible Solana transactions. Transaction simulation is preflight only; trade commands require an explicit preflight/live choice. Keep `VEXUM_NO_BROADCAST=1` for read-only use and all automated tests. A live transaction requires `--live`, an unlocked local encrypted wallet and exact interactive `SUBMIT <digest>` authorization.
+
+Never put private keys, seed phrases, passphrases, real `.env` files, vaults or transaction/position state in Git. Key import and export remain local. Exports are encrypted. Do not pass secrets as command arguments. Use a masked prompt where possible. JavaScript cannot guarantee complete memory erasure. Windows users must protect their profile and vault directory with appropriate ACLs; POSIX modes do not enforce Windows ACLs.
+
+The shared transaction service enforces simulation, immutable messages, exact signer sets, full genesis identity, executable program accounts, remaining SOL reserves, debit/fee caps, blockhash validity and durable single-attempt claims. Jupiter execution additionally verifies encoded amounts and slippage, allowed instruction layouts, account roles and simulated wallet token effects. Unsupported layouts fail closed. Never delete an uncertain claim to retry: use `transaction status` and `trade reconcile`. Missing/pruned chain evidence stays uncertain. No automatic resubmission is implemented. Supply a stable transfer `--intent` for deduplication across rebuilt messages.
+
+Trade history locking and budgets are local safeguards. Generic transfer/launch/NFT operations enforce reviewed total debit, fees and remaining SOL balance; the swap inspector additionally enforces a separate token-account rent cap. Reserve checks are point-in-time, not on-chain or cross-command wallet reservations. Use designated wallets with bounded funds and do not run overlapping spending operations against one wallet.
+
+Read-only RPC fallback is allowed; submission stays on one provider. RPCs and price/indexing providers remain trust boundaries. A compromised RPC can lie about simulation, account state or confirmation. Public HTTPS metadata is checked against reviewed fields but may change afterward; prefer immutable IPFS content. Market observations do not prove executable liquidity. Local source auditing returns pattern candidates, not a security certification.
+
+All runtime SDK code is bundled with a dependency inventory and third-party notices. The reviewed source uses Jayson 5's compatible browser client and an independently owned pure JavaScript integer backend in `vendor/bigint-buffer-safe`. The backend avoids vulnerable native bigint-buffer code; it is not an upstream security release. Audit source dependencies and inspect the bundle inventory on every update. Consumers' npm audits do not inspect bundled code.
+
+FUD TXN BOT is an isolated Coming Soon placeholder. It must never request credentials, sign, submit, or trade. Multi-wallet bundling is disabled.
+
+Report suspected issues privately to the repository owner. Do not include real keys or publish an exploit against funded wallets. No private reporting address or response SLA is currently configured. Live Pump/Jupiter operation needs appropriate provider access, a designated funded wallet, independent verification and explicit authorization; fixture tests alone are insufficient evidence of production safety.

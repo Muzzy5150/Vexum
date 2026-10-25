@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.png binary
+# Preserve the byte-for-byte terminal stream, including PTY CRLF and ANSI controls.
+docs/screenshots/*.ansi -text -diff
