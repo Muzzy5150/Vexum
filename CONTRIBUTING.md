@@ -1,6 +1,6 @@
 # Contributing to VEXUM
 
-VEXUM is a Solana Mainnet **Developer Preview**. Funded execution is not production verified. You need no wallet, funds or production API credentials to develop and run normal checks.
+VEXUM is a Solana Mainnet CLI. Funded execution has not yet been verified on mainnet. You need no wallet, funds or production API credentials to develop and run normal checks.
 
 ## Start locally
 

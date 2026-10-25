@@ -1,8 +1,8 @@
-# Developer Preview capabilities
+# VEXUM CLI capabilities
 
 Status: **0.2.0-dev.1**. Real Solana Mainnet data and real transaction builders; no paper trading, fictional balances, pretend fills or autonomous spending. Funded mainnet execution is unverified and deferred. Local tests do not close that acceptance gate. See [release checks](RELEASE.md) and [remaining mainnet acceptance](MAINNET_ACCEPTANCE.md).
 
-| Feature / commands | Implementation | Test evidence | Limitations | Preview status |
+| Feature / commands | Implementation | Test evidence | Limitations | Verification status |
 | --- | --- | --- | --- | --- |
 | Startup, direct commands, console and fixed natural phrases | Original artwork/navigation, central Commander routes, explicit unsupported errors | Type/build/lint, routing units, 29-route subprocess smoke, 3 PTY scenarios, clean installed package | No general autonomous agent; natural input supports documented phrases only | Verified locally |
 | `wallet create/import/show/reveal/export` and vanity prefix | Real Ed25519; public-half validation; scrypt/AES-GCM vaults/exports; explicit terminal-only reveal | Generation/vanity/tamper/permissions/import/export tests and isolated encrypted-vault integration | Reveal deliberately prints a key only after explicit opt-in; JS memory erasure/Windows ACL limits | Local verified |
@@ -29,4 +29,4 @@ Status: **0.2.0-dev.1**. Real Solana Mainnet data and real transaction builders;
 
 The root `help`, `status`, `version`, console/interactive aliases and documented Coin Launcher/Coin Sniper/FUD phrases retain their behavior. Run `vexum GROUP --help` for options, or see the README command examples. Every supported product signing/submission path uses `src/services/transactions.ts`; Jupiter adds asset/route inspection. Defaults never silently trade. `--preflight` is a security simulation, not a trading mode.
 
-Production capabilities remain contingent on trustworthy RPC/programs, credentials, bounded funds and individual exact approval. No signatures/actual mainnet costs are claimed by this developer preview. Unsupported features remain explicit errors; FUD remains the intentional Coming Soon exception.
+Production capabilities remain contingent on trustworthy RPC/programs, credentials, bounded funds and individual exact approval. No funded mainnet transaction signatures or actual spending costs are claimed by this verification evidence. Unsupported features remain explicit errors; FUD remains the intentional Coming Soon exception.
