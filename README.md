@@ -1,5 +1,11 @@
 # VEXUM CLI — Developer Preview
 
+[![GitHub Actions](https://github.com/Muzzy5150/Vexum/actions/workflows/cli.yml/badge.svg?branch=main)](https://github.com/Muzzy5150/Vexum/actions/workflows/cli.yml) ![Developer Preview](https://img.shields.io/badge/status-Developer%20Preview-F59E0B) ![Solana Mainnet Beta](https://img.shields.io/badge/Solana-Mainnet%20Beta-9945FF?logo=solana&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-CLI-3178C6?logo=typescript&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-22.18%2B-339933?logo=nodedotjs&logoColor=white) ![MIT License](https://img.shields.io/badge/license-MIT-007ec6) [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-2ea44f)](CONTRIBUTING.md)
+
+**Solana CLI · TypeScript · Wallet tooling · Token intelligence · Pump.fun · Jupiter V2 · Metaplex Core · Open-source developer tools**
+
+[Screenshots](#screenshots) · [Installation](#installation) · [Wallets](#wallets) · [Token intelligence](#intelligence-and-local-tools) · [Launcher & NFTs](#pumpfun-launch-and-nfts) · [Sniper & trading](#sniper-and-trading) · [Contributing](CONTRIBUTING.md)
+
 VEXUM's terminal toolkit for Solana wallets, token intelligence, mainnet launches, monitoring and reviewed live trading. Original interface and artwork are preserved. FUD TXN BOT remains **Coming Soon**.
 
 This developer preview is for contributors building real Solana Mainnet tools. Wallet/token reads and production Jupiter quote/build responses have been observed; offline tests and local SVM transfer/Core simulations pass. **Funded mainnet transfers, swaps, NFT mints and token launches remain unverified. This is not a production-verified release.** Simulation is a security check, never a trading mode.
@@ -8,6 +14,25 @@ No website, marketplace or API server is required. The existing repository histo
 
 Contributors: start with [CONTRIBUTING.md](CONTRIBUTING.md), [architecture](docs/ARCHITECTURE.md) and [adding tools](docs/ADDING_TOOLS.md). Original terminal artwork and FUD TXN BOT's Coming Soon placement are protected by regression tests.
 
+## Screenshots
+
+These are **real captures of the VEXUM terminal interface**, with original colors and ASCII artwork. They illustrate the UI, not completed live mainnet transactions. [Capture details](docs/screenshots/README.md).
+
+### VEXUM Console
+
+[![VEXUM main terminal console with its original ASCII-art branding](docs/screenshots/console.png)](docs/screenshots/console.png)
+
+| Coin Launcher | Coin Sniper |
+| :---: | :---: |
+| [![VEXUM Coin Launcher terminal menu](docs/screenshots/launcher.png)](docs/screenshots/launcher.png) | [![VEXUM Coin Sniper terminal menu](docs/screenshots/sniper.png)](docs/screenshots/sniper.png) |
+
+### FUD TXN BOT — Coming Soon
+
+[![FUD TXN BOT terminal artwork — Coming Soon and deliberately disabled](docs/screenshots/fud-txn-bot.png)](docs/screenshots/fud-txn-bot.png)
+
+**FUD TXN BOT is display-only.** It cannot access wallets, sign, or send transactions.
+
+## Installation
 Requires Node 22.18+ and npm. Install/build from a clean checkout:
 
 ```sh
