@@ -1,14 +1,14 @@
 #!/usr/bin/env sh
-
 set -eu
-
-VEXUM_ROOT="/Users/muzzy5150/Downloads/VEXUM"
-
-if [ -f "$VEXUM_ROOT/.env.local" ]; then
-  set -a
-  . "$VEXUM_ROOT/.env.local"
-  set +a
+VEXUM_SOURCE="$0"
+while [ -L "$VEXUM_SOURCE" ]; do
+  VEXUM_DIR=$(CDPATH= cd -- "$(dirname -- "$VEXUM_SOURCE")" && pwd)
+  VEXUM_LINK=$(readlink "$VEXUM_SOURCE")
+  case "$VEXUM_LINK" in /*) VEXUM_SOURCE="$VEXUM_LINK" ;; *) VEXUM_SOURCE="$VEXUM_DIR/$VEXUM_LINK" ;; esac
+done
+VEXUM_ROOT=$(CDPATH= cd -- "$(dirname -- "$VEXUM_SOURCE")" && pwd)
+if [ ! -f "$VEXUM_ROOT/dist/vexum.js" ]; then
+  echo 'Build the CLI first: npm ci --ignore-scripts && npm run build' >&2
+  exit 1
 fi
-
-cd "$VEXUM_ROOT/scripts"
-exec node --import tsx src/vexum.ts "$@"
+exec node "$VEXUM_ROOT/bin/vexum.js" "$@"

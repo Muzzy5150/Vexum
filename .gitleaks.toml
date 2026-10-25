@@ -1,0 +1,12 @@
+title = "VEXUM checked-out tree secret scan"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Exact public fixture values: Jupiter OpenAPI SHA-256 and a Solana AMM account; neither grants access"
+regexTarget = "secret"
+regexes = [
+  '^6fbde9bc19f82a1fba724181103d759fbe35f58f4aae865b4d943f01c1e26e6b$',
+  '^9GTj99g9tbz9U6UYDsX6YeRTgUnkYG6GTnHv3qLa5aXq$',
+]

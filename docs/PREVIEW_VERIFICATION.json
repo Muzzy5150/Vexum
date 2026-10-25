@@ -1,0 +1,198 @@
+{
+  "format": "vexum-developer-preview-verification-v1",
+  "observedAt": "2026-10-25T04:53:53.264Z",
+  "version": "0.2.0-dev.1",
+  "runtimeBaseline": "8a447813e9343d1569548afb9522909dc68adaf9",
+  "localPlatform": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "node": "26.11.1"
+  },
+  "noMainnetSigningOrSubmission": true,
+  "fundedMainnetAcceptance": "deferred, unverified",
+  "checks": {
+    "cleanNpmCi": "passed",
+    "typecheck": "passed",
+    "lint": "passed",
+    "productionBuild": "passed",
+    "unit": {
+      "pass": 97,
+      "fail": 0
+    },
+    "integration": {
+      "pass": 6,
+      "fail": 0
+    },
+    "posixPty": {
+      "pass": 3,
+      "fail": 0
+    },
+    "smokeRoutes": {
+      "pass": 29,
+      "fail": 0
+    },
+    "packedInstall": "passed, repeated installed smoke and audit",
+    "sourceAudit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "installedAudit": {
+      "total": 0
+    },
+    "gitleaks": {
+      "version": "8.30.1",
+      "currentTree": "passed",
+      "exactPublicValueAllowances": 2
+    },
+    "securityScan": {
+      "scanId": "ba08709f-32ff-45ca-bb50-c2b9083117ca",
+      "confirmedFindings": 0,
+      "scope": "First-party baseline; exclusions and publication-only delta described in SECURITY_REVIEW.md"
+    }
+  },
+  "production": {
+    "genesis": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+    "programAccounts": {
+      "status": "observed",
+      "result": [
+        {
+          "program": "11111111111111111111111111111111",
+          "executable": true,
+          "loader": "NativeLoader1111111111111111111111111111111"
+        },
+        {
+          "program": "ComputeBudget111111111111111111111111111111",
+          "executable": true,
+          "loader": "NativeLoader1111111111111111111111111111111"
+        },
+        {
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "executable": true,
+          "loader": "BPFLoaderUpgradeab1e11111111111111111111111"
+        },
+        {
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "executable": true,
+          "loader": "BPFLoaderUpgradeab1e11111111111111111111111"
+        },
+        {
+          "program": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+          "executable": true,
+          "loader": "BPFLoader2111111111111111111111111111111111"
+        },
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "executable": true,
+          "loader": "BPFLoaderUpgradeab1e11111111111111111111111"
+        },
+        {
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "executable": true,
+          "loader": "BPFLoaderUpgradeab1e11111111111111111111111"
+        },
+        {
+          "program": "CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d",
+          "executable": true,
+          "loader": "BPFLoaderUpgradeab1e11111111111111111111111"
+        }
+      ]
+    },
+    "pumpGlobal": {
+      "status": "observed",
+      "result": {
+        "address": "4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf",
+        "owner": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "initialized": true,
+        "createV2Enabled": true
+      }
+    },
+    "pumpWebSocket": {
+      "status": "observed",
+      "eventCount": 0,
+      "errors": [],
+      "stopped": true
+    },
+    "walletRead": "observed",
+    "tokenRead": "observed",
+    "jupiter": {
+      "quote": "observed",
+      "build": "observed",
+      "lookupTables": [
+        "2Lvj7QkiAWMHziSQbP4yZcoYJPLTESKUWdscnpbj7Ham"
+      ],
+      "networkFeeLamports": 8379,
+      "unfundedSimulationError": "AccountNotFound",
+      "interpretation": "Actual provider build validated; unfunded simulation does not verify a funded swap"
+    },
+    "unsignedUnfundedPreflights": {
+      "status": "observed",
+      "result": [
+        {
+          "operation": "transfer",
+          "networkFeeLamports": 5000,
+          "simulationError": "AccountNotFound",
+          "unitsConsumed": 0,
+          "interpretation": "Unfunded preflight rejected; does not verify funded protocol execution"
+        },
+        {
+          "operation": "pumpCreateV2",
+          "networkFeeLamports": 10000,
+          "simulationError": "AccountNotFound",
+          "unitsConsumed": 0,
+          "interpretation": "Unfunded preflight rejected; does not verify funded protocol execution"
+        },
+        {
+          "operation": "coreCreateV1",
+          "networkFeeLamports": 10000,
+          "simulationError": "AccountNotFound",
+          "unitsConsumed": 0,
+          "interpretation": "Unfunded preflight rejected; does not verify funded protocol execution"
+        }
+      ]
+    },
+    "credentialsConfigured": {
+      "jupiter": false,
+      "pinata": false,
+      "helius": false,
+      "solscan": false,
+      "dedicatedRpc": false
+    },
+    "broadcasts": 0
+  },
+  "localValidator": {
+    "validator": {
+      "feature-set": 3345198602,
+      "solana-core": "4.1.2"
+    },
+    "transfer": {
+      "simulation": "passed",
+      "feeLamports": 5000,
+      "unitsConsumed": 150
+    },
+    "core": {
+      "simulation": "passed",
+      "feeLamports": 10000,
+      "unitsConsumed": 7868
+    },
+    "additionalEvidence": {
+      "coreProgramDataSha256": "51d41542456639a01820c747e72b9d3b4ca258930a5bbb7e78db0cda133dc209",
+      "programSource": "read-only mainnet executable clone",
+      "assertions": "real SVM simulation; decoded simulated Core account; no signature/broadcast; balances unchanged; asset absent; fresh in-memory keys; temporary ledger cleaned",
+      "rpcMethods": [
+        "getVersion",
+        "getSlot",
+        "getGenesisHash",
+        "getBalance",
+        "getLatestBlockhash",
+        "getMultipleAccounts",
+        "getFeeForMessage",
+        "simulateTransaction",
+        "getAccountInfo"
+      ]
+    }
+  }
+}

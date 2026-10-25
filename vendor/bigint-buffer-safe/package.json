@@ -1,0 +1,9 @@
+{
+  "name": "@vexum/bigint-buffer-safe",
+  "version": "1.1.6",
+  "description": "VEXUM-owned pure JavaScript compatibility backend for bigint-buffer's four conversion functions; not an upstream release",
+  "main": "index.cjs",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "files": ["index.cjs", "index.d.ts", "README.md", "LICENSE"]
+}
